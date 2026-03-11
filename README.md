@@ -9,7 +9,7 @@ React + TypeScript + Vite
 ## 🚀 Despliegue
 El proyecto se encuentra desplegado en Vercel:
 
-🔗 https://portal-afiliados-alexandra-ramos.vercel.app
+🔗 https://portal-afiliados-alexandra-ramos.netlify.app/
 
 ## 🔐 Credenciales de prueba
 Usuario: afiliado@prueba.com  
