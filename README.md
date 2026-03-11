@@ -12,8 +12,8 @@ El proyecto se encuentra desplegado en Vercel:
 🔗 https://portal-afiliados-alexandra-ramos.vercel.app
 
 ## 🔐 Credenciales de prueba
-Usuario: alexa@prueba.com  
-Contraseña: 123456
+Usuario: afiliado@prueba.com  
+Contraseña: Prueba2024*
 
 ## 📦 Instalación local
 
