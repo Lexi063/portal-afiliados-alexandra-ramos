@@ -1,155 +1,150 @@
-import { useState, useEffect } from "react";
-import type { FormEvent } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
-
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 export default function Login() {
-
+  const { login } = useAuth();
   const navigate = useNavigate();
-  const { login, user } = useAuth();
-  useEffect(() => {
-  if (user) {
-    navigate("/dashboard");
-  }
-}, [user, navigate]);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const [errorEmail, setErrorEmail] = useState("");
-  const [errorPassword, setErrorPassword] = useState("");
-
+  const [mostrar, setMostrar] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [alert, setAlert] = useState("");
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  setLoading(true);
 
-    e.preventDefault();
-
-    setErrorEmail("");
-    setErrorPassword("");
-    setAlert("");
-
-    if (!email) {
-      setErrorEmail("El correo es obligatorio");
-      return;
-    }
-
-    if (!emailRegex.test(email)) {
-      setErrorEmail("Correo electrónico no válido");
-      return;
-    }
-
-    if (!password) {
-      setErrorPassword("La contraseña es obligatoria");
-      return;
-    }
-
-    setLoading(true);
-
-    setTimeout(() => {
-
-      if (email === "afiliado@prueba.com" && password === "Prueba2024*") {
-
-        login("Alex",email);
-        navigate("/dashboard");
-
-      } else {
-
-        setAlert("Credenciales incorrectas. Inténtalo de nuevo");
-
-      }
-
-      setLoading(false);
-
-    }, 1000);
-  };
+  setTimeout(() => {
+    login("Alex", email);
+    navigate("/dashboard");
+  }, 800);
+};
 
   return (
+    <div style={container}>
+      <form onSubmit={handleSubmit} style={card}>
+        <h1 style={title}>Portal de Afiliados</h1>
+        <p style={subtitle}>Accede a tu cuenta</p>
 
-    <div style={{
-      display:"flex",
-      justifyContent:"center",
-      alignItems:"center",
-      height:"100vh",
-      background:"#f1f5f9"
-    }}>
-
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          background:"white",
-          padding:"40px",
-          borderRadius:"10px",
-          boxShadow:"0 4px 10px rgba(0,0,0,0.1)",
-          width:"320px"
-        }}
-      >
-
-        <h2 style={{textAlign:"center"}}>Portal Afiliados</h2>
-
-        {alert && (
-          <p style={{color:"red"}}>{alert}</p>
-        )}
-
-        <input
-  type="email"
-  placeholder="Correo"
-  value={email}
-  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-  style={{ width:"100%", padding:"10px", marginTop:"10px", borderRadius:"6px", border:"1px solid #ccc" }}
-/>
-
-        {errorEmail && (
-          <p style={{color:"red"}}>{errorEmail}</p>
-        )}
-
-        <div style={{marginTop:"10px"}}>
-
+        <div style={inputGroup}>
+          <label>Correo electrónico</label>
           <input
-  type={showPassword ? "text" : "password"}
-  placeholder="Contraseña"
-  value={password}
-  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-  style={{ flex:1, width:"80%", padding:"10px", marginTop:"10px", borderRadius:"6px", border:"1px solid #ccc" }}
-/>
-
-          <button
-            type="button"
-            onClick={()=>setShowPassword(!showPassword)}
-          >
-            👁
-          </button>
-
+            type="email"
+            placeholder="ejemplo@correo.com"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            style={input}
+            required
+          />
         </div>
 
-        {errorPassword && (
-          <p style={{color:"red"}}>{errorPassword}</p>
-        )}
+        <div style={inputGroup}>
+          <label>Contraseña</label>
+          <div style={passwordWrapper}>
+            <input
+              type={mostrar ? "text" : "password"}
+              placeholder="••••••••"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              style={{ ...input, paddingRight: "40px" }}
+              required
+            />
+            <span onClick={() => setMostrar(!mostrar)} style={eyeButton}>
+              {mostrar ? <FiEyeOff /> : <FiEye />}
+            </span>
+          </div>
+        </div>
 
         <button
   type="submit"
-  disabled={loading}
-  style={{
-    marginTop:"20px",
-    width:"100%",
-    padding:"10px",
-    background:"#2563eb",
-    color:"white",
-    border:"none",
-    borderRadius:"6px",
-    cursor:"pointer"
+  style={button}
+  onMouseOver={(e) => {
+    e.currentTarget.style.opacity = "0.9";
+    e.currentTarget.style.transform = "scale(1.02)";
+  }}
+  onMouseOut={(e) => {
+    e.currentTarget.style.opacity = "1";
+    e.currentTarget.style.transform = "scale(1)";
   }}
 >
-          {loading ? "Ingresando..." : "Ingresar"}
-        </button>
-
-      </form>
-
-    </div>
+  {loading ? "Ingresando..." : "Iniciar sesión"}
+</button>
+          </form>
+          </div>
   );
 }
+
+const container = {
+  minHeight: "100vh",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  background: "linear-gradient(135deg, #2563eb, #1e3a8a)"
+};
+
+const card = {
+  background: "white",
+  padding: "40px",
+  borderRadius: "14px",
+  width: "380px",
+  boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
+  display: "flex",
+  flexDirection: "column" as const,
+  gap: "20px"
+};
+
+const title = {
+  fontSize: "24px",
+  fontWeight: 700,
+  textAlign: "center" as const
+};
+
+const subtitle = {
+  textAlign: "center" as const,
+  fontSize: "14px",
+  color: "#64748b",
+  marginBottom: "10px"
+};
+
+const inputGroup = {
+  display: "flex",
+  flexDirection: "column" as const,
+  gap: "6px",
+  fontSize: "14px"
+};
+
+const input = {
+  padding: "12px",
+  borderRadius: "8px",
+  border: "1px solid #cbd5e1",
+  fontSize: "14px",
+  outline: "none"
+};
+
+const passwordWrapper = {
+  position: "relative" as const,
+  display: "flex",
+  alignItems: "center"
+};
+
+const eyeButton = {
+  position: "absolute" as const,
+  right: "12px",
+  cursor: "pointer",
+  color: "#64748b",
+  fontSize: "18px"
+};
+
+const button = {
+  marginTop: "10px",
+  background: "#2563eb",
+  color: "white",
+  border: "none",
+  padding: "12px",
+  borderRadius: "8px",
+  fontWeight: 600,
+  cursor: "pointer",
+  fontSize: "15px"
+};

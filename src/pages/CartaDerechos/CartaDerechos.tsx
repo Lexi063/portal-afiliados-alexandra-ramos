@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Navbar from "../../components/Navbar";
 import SolicitudesTable from "./SolicitudesTable";
 import SolicitudForm from "./SolicitudForm";
 import SolicitudDetalle from "./SolicitudDetalle";
@@ -54,7 +53,7 @@ export default function CartaDerechos() {
   };
 
   // ================================
-  // MENSAJES
+  // TOASTS
   // ================================
   const mostrarMensajeExito = () => {
     setMostrarToast(true);
@@ -70,7 +69,7 @@ export default function CartaDerechos() {
   // EXPORTAR CSV
   // ================================
   const exportarCSV = () => {
-    const encabezados = ["Número Solicitud","Tipo","Afiliado","Fecha","Estado"];
+    const encabezados = ["Número Solicitud", "Tipo", "Afiliado", "Fecha", "Estado"];
 
     const filas = solicitudes.map(s => [
       s.numeroSolicitud,
@@ -96,77 +95,100 @@ export default function CartaDerechos() {
   };
 
   return (
-    <>
-      <Navbar />
+    <div style={container}>
+      <h1 style={title}>Carta de Derechos y Deberes</h1>
 
-      <div style={{ padding: "40px 60px" }}>
-        <h1>Carta de Derechos y Deberes</h1>
-
-        <div style={barraAcciones}>
-          <button
-            onClick={() => setMostrarFormulario(true)}
-            style={btnPrimario}
-          >
-            + Nueva Solicitud
-          </button>
-
-          <button onClick={exportarCSV} style={btnSecundario}>
-            Exportar CSV
-          </button>
-        </div>
-
-        <SolicitudesTable
-          solicitudes={solicitudes}
-          setSolicitudes={setSolicitudes}
-          onEditar={setSolicitudEditar}
-          onVer={setSolicitudVer}
-        />
-
-        <SolicitudForm
-          visible={mostrarFormulario || solicitudEditar !== null}
-          onClose={() => {
-            setMostrarFormulario(false);
-            setSolicitudEditar(null);
-          }}
-          onSave={(data) => {
-            try {
-              if (solicitudEditar) {
-                actualizarSolicitud({ ...solicitudEditar, ...data });
-              } else {
-                agregarSolicitud(data);
-              }
-            } catch {
-              mostrarMensajeError();
-            }
-          }}
-          solicitudEditar={solicitudEditar}
-        />
-
-        <SolicitudDetalle
-          visible={solicitudVer !== null}
-          solicitud={solicitudVer}
-          onClose={() => setSolicitudVer(null)}
-        />
-
-        {mostrarToast && (
-          <div style={toastExitoStyle}>
-            Solicitud guardada correctamente
-          </div>
-        )}
-
-        {mostrarError && (
-          <div style={toastErrorStyle}>
-            Error al guardar la solicitud
-          </div>
-        )}
+      <div style={barraAcciones}>
+      <button
+      onClick={() => setMostrarFormulario(true)}
+      style={btnPrimario}
+      onMouseOver={(e) => {
+      e.currentTarget.style.transform = "scale(1.03)";
+      }}
+      onMouseOut={(e) => {
+      e.currentTarget.style.transform = "scale(1)";
+      }}
+    >
+      + Nueva Solicitud
+      </button>
+        <button
+      onClick={exportarCSV}
+      style={btnSecundario}
+      onMouseOver={(e) => {
+      e.currentTarget.style.transform = "scale(1.03)";
+      }}
+      onMouseOut={(e) => {
+      e.currentTarget.style.transform = "scale(1)";
+      }}
+      >
+      Exportar CSV
+      </button>
       </div>
-    </>
+
+      <SolicitudesTable
+        solicitudes={solicitudes}
+        setSolicitudes={setSolicitudes}
+        onEditar={setSolicitudEditar}
+        onVer={setSolicitudVer}
+      />
+
+      <SolicitudForm
+        visible={mostrarFormulario || solicitudEditar !== null}
+        onClose={() => {
+          setMostrarFormulario(false);
+          setSolicitudEditar(null);
+        }}
+        onSave={(data) => {
+          try {
+            if (solicitudEditar) {
+              actualizarSolicitud({ ...solicitudEditar, ...data });
+            } else {
+              agregarSolicitud(data);
+            }
+          } catch {
+            mostrarMensajeError();
+          }
+        }}
+        solicitudEditar={solicitudEditar}
+      />
+
+      <SolicitudDetalle
+        visible={solicitudVer !== null}
+        solicitud={solicitudVer}
+        onClose={() => setSolicitudVer(null)}
+      />
+
+      {mostrarToast && (
+        <div style={toastExitoStyle}>
+          Solicitud guardada correctamente
+        </div>
+      )}
+
+      {mostrarError && (
+        <div style={toastErrorStyle}>
+          Error al guardar la solicitud
+        </div>
+      )}
+    </div>
   );
 }
 
 // ================================
 // ESTILOS
 // ================================
+const container = {
+  padding: "40px 60px",
+  maxWidth: "2500px",
+  margin: "0 auto"
+};
+
+const title = {
+  marginBottom: "25px",
+  fontWeight: 600,
+  letterSpacing: "0.5px",
+  color: "#1e3a8a"
+};
+
 const barraAcciones = {
   display: "flex",
   justifyContent: "space-between",
@@ -177,20 +199,22 @@ const btnPrimario = {
   background: "#2563eb",
   color: "white",
   border: "none",
-  padding: "10px 16px",
-  borderRadius: "6px",
-  fontWeight: "bold",
-  cursor: "pointer"
+  padding: "10px 18px",
+  borderRadius: "8px",
+  fontWeight: 600,
+  cursor: "pointer",
+  transition: "all 0.2s ease"
 };
 
 const btnSecundario = {
-  background: "#0ea5e9",
+  background: "#60a5fa",
   color: "white",
   border: "none",
-  padding: "10px 16px",
-  borderRadius: "6px",
-  fontWeight: "bold",
-  cursor: "pointer"
+  padding: "10px 18px",
+  borderRadius: "8px",
+  fontWeight: 600,
+  cursor: "pointer",
+  transition: "all 0.2s ease"
 };
 
 const toastBase = {
@@ -214,3 +238,4 @@ const toastErrorStyle = {
   ...toastBase,
   background: "#dc2626"
 };
+

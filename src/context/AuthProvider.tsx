@@ -1,16 +1,13 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
 import { AuthContext } from "./auth-context";
-
-type User = {
-  name: string;
-  email: string;
-};
+import type { User } from "./auth-context";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+
   const [user, setUser] = useState<User | null>(() => {
-    const storedUser = localStorage.getItem("user");
-    return storedUser ? JSON.parse(storedUser) : null;
+    const stored = localStorage.getItem("user");
+    return stored ? JSON.parse(stored) : null;
   });
 
   const login = (name: string, email: string) => {
