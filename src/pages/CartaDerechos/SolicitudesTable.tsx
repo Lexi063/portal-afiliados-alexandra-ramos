@@ -126,7 +126,13 @@ export default function SolicitudesTable({
                   <td style={celda}> {s.numeroSolicitud}</td>
                   <td style={celda}> {s.tipoSolicitud}</td>
                   <td style={celda}>{s.nombreAfiliado}</td>
-                  <td style={celda}>{s.fechaSolicitud}</td>
+                  <td style={celda}>
+                  {new Date(s.fechaSolicitud).toLocaleDateString("es-ES", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric"
+                }).replace(/\//g, "-")}
+                </td>
 
                   <td style={{ textAlign: "center" }}>
                   <span
